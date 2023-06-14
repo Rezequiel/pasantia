@@ -32,19 +32,20 @@ class EntidadController extends BaseController
 
         if (!$this->request->is('post')) {
 
-            return view('templates/header', ['title' => 'Nuevo elemento'])
+            return view('templates/header', ['title' => 'Nuevo elemento', 'personas' => $this->obtenerDatos(null, \App\Models\Persona::class)['entidades']])
                 .view('entidades/create')
                 .view('templates/footer');
         }
 
-        $post = $this->request->getPost(['nombre', 'comentarios']);
+        $post = $this->request->getPost(['nombre', 'comentarios', 'titular_id']);
 
         if (!$this->validateData($post, [
             'nombre' => 'required|max_length[255]|min_length[3]',
             'comentarios'  => 'required|max_length[5000]|min_length[10]',
+            'titular_id' => 'required|numeric',
         ])) {
 
-            return view('templates/header', ['title' => 'Nuevo elemento'])
+            return view('templates/header', ['title' => 'Nuevo elemento', 'personas' => $this->obtenerDatos(null, \App\Models\Persona::class)])
                 .view('entidades/create')
                 .view('templates/footer');
         }
@@ -55,6 +56,7 @@ class EntidadController extends BaseController
             'nombre' => $post['nombre'],
             'nombre_corto'  => url_title($post['nombre'], '-', true),
             'comentarios'  => $post['comentarios'],
+            'titular_id' => $post['titular_id'],
         ]);
 
         return view('templates/header', ['title' => 'Nuevo elemento'])
@@ -62,13 +64,13 @@ class EntidadController extends BaseController
             .view('templates/footer');
     }
 
-    private function obtenerDatos(?string $slug = null)
+    private function obtenerDatos(?string $slug = null, string $clase = '')
     {
-        $model = model(Entidad::class);
+        $model = model($clase ?: Entidad::class);
 
         return [
             'entidades' => $model->getEntidades($slug ?: false),
-            'title' => 'Entidades guardadas'
+            'title' => 'Comercios'
         ];
     }
 }
