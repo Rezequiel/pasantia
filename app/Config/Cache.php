@@ -12,7 +12,9 @@ use CodeIgniter\Config\BaseConfig;
 
 class Cache extends BaseConfig
 {
-    /**
+    
+	// esto es un comentario
+/**
      * --------------------------------------------------------------------------
      * Primary Handler
      * --------------------------------------------------------------------------
